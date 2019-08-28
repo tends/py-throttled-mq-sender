@@ -1,0 +1,24 @@
+activemq:
+  image: webcenter/activemq:latest
+  ports:
+    - 8161:8161
+    - 61616:61616
+    - 61613:61613
+  environment:
+    ACTIVEMQ_NAME: amq
+    ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT: 'True'
+    ACTIVEMQ_ADMIN_LOGIN: admin
+    ACTIVEMQ_ADMIN_PASSWORD: admin
+    ACTIVEMQ_WRITE_LOGIN: write
+    ACTIVEMQ_WRITE_PASSWORD: password
+    ACTIVEMQ_READ_LOGIN: read
+    ACTIVEMQ_READ_PASSWORD: password
+    ACTIVEMQ_STATIC_TOPICS: static-topic-1;static-topic-2
+    ACTIVEMQ_STATIC_QUEUES: static-queue-1;static-queue-2
+    ACTIVEMQ_ENABLED_SCHEDULER: "true"
+    ACTIVEMQ_MIN_MEMORY: 512
+    ACTIVEMQ_MAX_MEMORY: 2048
+    ACTIVEMQ_LOGGER_LOGLEVEL: DEBUG
+  #volumes:
+  #  - /container_data/activemq/data:/data/activemq
+  #  - /container_data/activemq/log:/var/log/activemq

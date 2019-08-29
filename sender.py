@@ -1,7 +1,8 @@
-
 import time
-from ratelimit import limits, sleep_and_retry
 import stomp
+from xml_doc import XmlDoc
+
+from rate_limit import RateLimited
 
 
 class MyListener(stomp.ConnectionListener):
@@ -12,47 +13,31 @@ class MyListener(stomp.ConnectionListener):
         print('received a message "%s"' % message)
 
 
-conn = stomp.Connection()
+conn = stomp.Connection(auto_content_length=False)
 conn.set_listener('', MyListener())
 conn.start()
 conn.connect('admin', 'password', wait=True)
-
 conn.subscribe(destination='/queue/test', id=1, ack='auto')
 
-# conn.send(body=' '.join(sys.argv[1:]), destination='/queue/test')
+
+xml_doc = XmlDoc('EquityNew - Copy (1).xml')
+print(xml_doc.event_id), exit()
 
 
-def RateLimited(maxPerSecond):
-    minInterval = 1.0 / float(maxPerSecond)
-    def decorate(func):
-        lastTimeCalled = [0.0]
-        def rateLimitedFunction(*args,**kargs):
-            elapsed = time.perf_counter() - lastTimeCalled[0]
-            leftToWait = minInterval - elapsed
-            if leftToWait>0:
-                time.sleep(leftToWait)
-            ret = func(*args,**kargs)
-            lastTimeCalled[0] = time.perf_counter()
-            return ret
-        return rateLimitedFunction
-    return decorate
-
-# @sleep_and_retry
-# @limits(calls=20, period=1)
-@RateLimited(20)
+@RateLimited(100)
 def conn_send(body, destination):
     conn.send(body=body, destination=destination)
 
 
 start_time = time.time()
 
-for e in range(100):
+for e in range(5000):
     conn_send(body=str(e), destination='/queue/test')
 
 stop_time = time.time()
-print(stop_time - start_time)
-time.sleep(2)
 
+time.sleep(2)
+print(stop_time - start_time)
 conn.disconnect()
 
 

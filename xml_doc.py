@@ -15,7 +15,7 @@ class XmlDoc(object):
         self.trade_id_prefix = _tradeId[0]
         self._trade_id_num = int(_tradeId[1])
 
-    def get_xml(self):
+    def get_msg(self):
         self._trade_id_num = self._trade_id_num + 1
 
         self.event_id = self.event_id + 1
@@ -32,4 +32,4 @@ class XmlDoc(object):
             self.xml_dict['tradeEvent']['trade']['tradeDetails']['equity']['cashSettleDate'] = \
             _now_plus_2d.strftime("%Y-%m-%d")
 
-        return xmltodict.unparse(self.xml_dict, pretty=True)
+        return [self.event_id, xmltodict.unparse(self.xml_dict, pretty=True)]

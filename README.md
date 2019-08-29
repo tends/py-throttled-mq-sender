@@ -1,1 +1,1 @@
-# py-throttled-mq-sender
+# Run sender.py 
